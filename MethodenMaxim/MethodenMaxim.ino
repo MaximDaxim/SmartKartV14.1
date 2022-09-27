@@ -111,11 +111,12 @@ void seitlichLinks(int starke)
 void rechtsKurve()
 {
   vl(true, 200);
-  hl(true, 50);
-  vr(true, 50);
-  hr(true, 200);
+  hl(true, 200);
+  hr(true, 150);
+  vr(true, 0);
+
 }
 void loop() 
 {
-  vl(true,200);
+  rechtsKurve();
 }
