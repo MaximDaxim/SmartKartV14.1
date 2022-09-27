@@ -1,0 +1,32 @@
+MethodenMain Nutzung
+
+void setup()
+{
+	Die Pin sind schon bestimmt
+}	
+
+Der erste Buchstabe gibt an ob es vorne oder hinten ist(v/h)
+Der zweite steht die Seite, entweder links oder rechts(l/r)
+
+Beispiel:
+
+void hl (boolean Richtung, int Stärke)
+
+Das hintere linke Rad wird angesteuert.
+
+
+
+Es müssen aber noch zwei Parameter übergeben werden, einmal die Richtung, sowie die Stärke.
+
+
+Die Richtung wird mit einem boolean angesteuert,true ist nach vorne fahren und false ist nach hinten fahren.
+
+
+Die Stärke gibt wieder wie schnell, dass Rad sich drehen soll.
+Die Zahl kann zwischen 0 - 255 bestimmt werden.
+
+
+void loop()
+{
+	vr(false, 127);//Das Rad Vorne Rechts dreht sich rückwärts mit circa 50% seiner Stärke(255 / 2 = 127)
+}
