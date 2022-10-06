@@ -29,7 +29,11 @@ void setup() {
   digitalWrite(ENA, HIGH);  
   digitalWrite(ENB, HIGH);
   digitalWrite(ENC, HIGH);  
-  digitalWrite(END, HIGH); 
+  digitalWrite(END, HIGH);
+  vl(true, 0);
+  vr(true, 0);
+  hl(true, 0);
+  hr(true, 0);
 }
 
 void forward(){ 
@@ -54,7 +58,7 @@ void hl(boolean Richtung, int Starke)
   }
 }
 
-void vl(boolean Richtung, int Starke)
+void hr(boolean Richtung, int Starke)
 {
   analogWrite(ENB,Starke);
   if(Richtung == true)
@@ -67,7 +71,7 @@ void vl(boolean Richtung, int Starke)
   }
 }
 
-void hr(boolean Richtung, int Starke)
+void vl(boolean Richtung, int Starke)
 {
   analogWrite(ENC,Starke);
   if(Richtung == true)
@@ -101,52 +105,33 @@ void seitlichLinks(int starke)
   hl(true, starke);
 }
 
-boolean richtung(int zahl)
-{
-  int ruckgabe = 0; // 1 nach vorne; 2 nach hinten; 0 Nichts
-  if(zahl >= 135)
-  {
-    ruckgabe = 2;
-  }
-  if(zahl <= 120)
-  {
-    ruckgabe = 1;
-  }
-  return ruckgabe;
-}
-
 void ansteuern(float Y,float X)
 {
   
-  float Starke;
-  if(Y <= 120)
+  if (Y > 140)
   {
-    Starke = Y + 127;
-    Starke = Y/255*200;
+    float starke = (-500*Y*Y/707147)+(1300500*Y/707147)-222.988;
+    
+    Serial.println(starke);
+    vr(false, starke);
+    vl(false, starke);
+    hr(false, starke);
+    hl(false, starke);
   }
-  else
+  if (Y < 114)
   {
-    Starke= Y/255*200;
+    float starke = (-500*Y*Y/707147)-(1300500*Y/707147)+200;
+
+    Serial.println(starke);
+    vr(true, starke);
+    vl(true, starke);
+    hr(true, starke);
+    hl(true, starke);
   }
-  Serial.println(richtung(Y));
-  Serial.println(Starke);
-  if(richtung(Y) == 2)
-  {
-    vr(false, Starke);
-    hl(false, Starke);
-    vl(false, Starke);
-    hr(false, Starke);
-  }
-  if(richtung(Y) == 1)
-  {
-    vr(true, Starke);
-    hl(true, Starke);
-    vl(true, Starke);
-    hr(true, Starke);
-  }
+  
 }
 void loop() 
 {
-  ansteuern(119,0);
+  ansteuern(255,0);
  
 }
