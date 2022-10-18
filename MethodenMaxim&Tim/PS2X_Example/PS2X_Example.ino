@@ -309,48 +309,8 @@ void loop() {
     if(ps2x.ButtonReleased(PSB_SQUARE))              //will be TRUE if button was JUST released
       Serial.println("Square just released");     
     
-    if (ps2x.Analog(PSS_LY) <= 100){   //Nach Vorne Fahren mit Sticks
-      digitalWrite(ENA, HIGH);
-      digitalWrite(ENB, HIGH);
-      digitalWrite(IN1, HIGH);      
-      digitalWrite(IN2, LOW); 
-      digitalWrite(IN3, LOW);      
-      digitalWrite(IN4, HIGH);
-      }
-      else{
-      digitalWrite(ENA, LOW);
-      digitalWrite(ENB, LOW);
-      digitalWrite(IN1, HIGH);      
-      digitalWrite(IN2, LOW); 
-      digitalWrite(IN3, LOW);      
-      digitalWrite(IN4, HIGH);}
-      
-      if (ps2x.Analog(PSS_LX) <= 100){
-      digitalWrite(ENA, HIGH);
-      digitalWrite(ENB, HIGH);
-      digitalWrite(IN1, LOW);      
-      digitalWrite(IN2, LOW); 
-      digitalWrite(IN3, LOW);      
-      digitalWrite(IN4, HIGH); 
-      }
-      if (ps2x.Analog(PSS_LX) >= 129){
-      digitalWrite(ENA, HIGH);
-      digitalWrite(ENB, HIGH);
-      digitalWrite(IN1, HIGH);      
-      digitalWrite(IN2, LOW); 
-      digitalWrite(IN3, LOW);      
-      digitalWrite(IN4, LOW); 
-      }
-      if (ps2x.Analog(PSS_LY) >= 129){
-      digitalWrite(ENA, HIGH);
-      digitalWrite(ENB, HIGH);
-      digitalWrite(IN1, LOW);      
-      digitalWrite(IN2, HIGH); 
-      digitalWrite(IN3, HIGH);      
-      digitalWrite(IN4, LOW); 
-      }
-    
-      
+    ansteuern(ps2x.Analog(PSS_LY),0);
+
     if(ps2x.Button(PSB_L1) || ps2x.Button(PSB_R1)) { //print stick values if either is TRUE
       Serial.print("Stick Values:");
       Serial.print(ps2x.Analog(PSS_LY), DEC); //Left stick, Y axis. Other options: LX, RY, RX  

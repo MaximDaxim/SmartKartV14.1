@@ -108,8 +108,9 @@ void seitlichLinks(int starke)
 void ansteuern(float Y,float X)
 {
   
-  
-    float starke = ((80/51*(-1))*Y+200); // Funktion gibt bei Y = 127.5 Null zurück, bei Y = 255 -200 und bei Y = 0 200
+  if (Y > 140)
+  {
+    float starke = (-500*Y*Y/707147)+(1300500*Y/707147)-222.988;
     
     Serial.println(starke);
     vr(false, starke);
@@ -117,9 +118,18 @@ void ansteuern(float Y,float X)
     hr(false, starke);
     hl(false, starke);
   }
-  
-  
+  if (Y < 114)
+  {
+    float starke = (-500*Y*Y/707147)-(1300500*Y/707147)+200;
 
+    Serial.println(starke);
+    vr(true, starke);
+    vl(true, starke);
+    hr(true, starke);
+    hl(true, starke);
+  }
+  
+}
 void loop() 
 {
   ansteuern(255,0);
