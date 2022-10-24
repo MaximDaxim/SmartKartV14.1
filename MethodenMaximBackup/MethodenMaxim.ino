@@ -110,7 +110,7 @@ void ansteuern(float Y,float X)
   
   if (Y > 140)
   {
-    float starke = (-500*Y*Y/707147)+(1300500*Y/707147)-222.988;
+    float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0;
     
     Serial.println(starke);
     vr(false, starke);
@@ -120,7 +120,7 @@ void ansteuern(float Y,float X)
   }
   if (Y < 114)
   {
-    float starke = (-500*Y*Y/707147)-(1300500*Y/707147)+200;
+    float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0;
 
     Serial.println(starke);
     vr(true, starke);
