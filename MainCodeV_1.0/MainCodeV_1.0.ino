@@ -192,8 +192,17 @@ void ansteuern(float Y,float X)
     hr(true, starke);
     hl(true, starke);
   }
-}
 
+
+  if(Y < 140 && Y > 114)
+  {
+   Serial.println(0);
+    vr(false, 0);
+    vl(false, 0);
+    hr(false, 0);
+    hl(false, 0); 
+  }
+}
 void loop() {
   /* You must Read Gamepad to get new values and set vibration values
      ps2x.read_gamepad(small motor on/off, larger motor strenght from 0-255)
@@ -221,7 +230,8 @@ void loop() {
       Serial.print(ps2x.Analog(PSS_RY), DEC); 
       Serial.print(",");
       Serial.println(ps2x.Analog(PSS_RX), DEC); 
-    }     
+    }    
+     
   }
   delay(50);  
 }
