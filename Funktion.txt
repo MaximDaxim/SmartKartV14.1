@@ -1,9 +1,9 @@
 Funktion zur Umrechnung von "Messwerten" des Kontrollers für den Arduino:
 
-Die Funktion soll die Messwerte des Kontrollers für den Arduino Übersetzen, sodass die Werte dirket für die 
+Wir brauchen eine Funktion, die die Messwerte des Kontrollers für den Arduino Übersetzen kann, sodass die Werte dirket für die 
 Stärke der Motoren genutzt werden kann. 
 
-der Kontroller misst auf der vertikalen Achse die Werte von 0 - 255. Das Maximum wird allerdings ganz unten und das Minimum ganz ober gemessen. 
+Der Kontroller misst auf der vertikalen Achse die Werte von 0 - 255. Das Maximum wird allerdings ganz unten und das Minimum ganz ober gemessen. 
 
 Die Motoren sollen aber in der Mitte(127.5) stillstehen und jeweils ganz oben und unten(0 & 255) mit einer Stärke von 200 Fahren.
 Ob die Motoren vorwärts oder rückwärts fahren wird getrennt festgelegt.
@@ -14,3 +14,5 @@ x ist die Messung des Kontrollers
 Also bei x = 127.5 soll gelten F = 0
 Bei x = 255 soll gelten F = 200
 Bei x = 0 soll gelten F = 200
+
+Setzt man diese Bedingungen in die allgemeine Formel einer Quadratischen Funktion ax^2+bx+c 

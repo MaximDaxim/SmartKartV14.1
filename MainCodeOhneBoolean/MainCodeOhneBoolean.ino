@@ -117,92 +117,81 @@ void setup(){
    }
 }
 
-void hl(boolean Richtung, int Starke)
+void hl(int Starke)
 {
-  analogWrite(ENA,Starke);
-  if(Richtung == true)
-  {
+    analogWrite(ENA,abs(Starke));
+  
+    if(Starke > 0)
+    {
     digitalWrite(IN1,true);
     digitalWrite(IN2,false);
-  }else{
+    }
+    else if(Starke < 0)
+    {
     digitalWrite(IN1,false);
     digitalWrite(IN2,true);
-  }
+    }
 }
 
-void hr(boolean Richtung, int Starke)
+void hr(int Starke)
 {
-  analogWrite(ENB,Starke);
-  if(Richtung == true)
+  analogWrite(ENB,abs(Starke));
+  
+  if(Starke > 0)
   {
     digitalWrite(IN5,false);
     digitalWrite(IN6,true);
-  }else{
+  }
+  else if(Starke < 0)
+  {
     digitalWrite(IN5,true);
     digitalWrite(IN6,false);
   }
 }
 
-void vl(boolean Richtung, int Starke)
+void vl(int Starke)
 {
-  analogWrite(ENC,Starke);
-  if(Richtung == true)
+  analogWrite(ENC,abs(Starke));
+  
+  if(Starke > 0)
   {
     digitalWrite(IN3,false);
     digitalWrite(IN4,true);
-  }else{
+  }
+  else if(Starke < 0)
+  {
     digitalWrite(IN3,true);
     digitalWrite(IN4,false);
   }
 }
 
-void vr(boolean Richtung, int Starke)
+void vr(int Starke)
 {
-  analogWrite(END,Starke);
-  if(Richtung == true)
+  analogWrite(END,abs(Starke));
+  
+  if(Starke > 0)
   {
     digitalWrite(IN7,true);
     digitalWrite(IN8,false);
-  }else{
+  }
+  else if (Starke < 0)
+  {
     digitalWrite(IN7,false);
     digitalWrite(IN8,true);
   }
 }
 
 void ansteuern(float Y,float X)
-{
-  
-  if (Y > 140)
-  {
-    float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0;
-    
-    Serial.println(starke);
-    vr(false, starke);
-    vl(false, starke);
-    hr(false, starke);
-    hl(false, starke);
-  }
-  if (Y < 114)
-  {
-    float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0;
-
-    Serial.println(starke);
-    vr(true, starke);
-    vl(true, starke);
-    hr(true, starke);
-    hl(true, starke);
-  }
-
-
-  if(Y < 140 && Y > 114)
-  {
-   Serial.println(0);
-    vr(false, 0);
-    vl(false, 0);
-    hr(false, 0);
-    hl(false, 0); 
-  }
+{   
+  float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0; 
+  Serial.println(starke);
+  vr(starke);
+  vl(starke);
+  hr(starke);
+  hl(starke);
 }
+  
+
 void loop() {
   /* You must Read Gamepad to get new values and set vibration values
      ps2x.read_gamepad(small motor on/off, larger motor strenght from 0-255)
