@@ -6,10 +6,10 @@
  *   - 2e colmun: Stef?
  * replace pin numbers by the ones you use
  ******************************************************************/
-#define PS2_DAT        8  //14    
-#define PS2_CMD        A15  //15
-#define PS2_SEL        A14  //16
-#define PS2_CLK        7  //17
+#define PS2_DAT        22  //14    
+#define PS2_CMD        A9  //15
+#define PS2_SEL        A10  //16
+#define PS2_CLK        12  //17
 //define the L298n IO pin
 #define ENA 5
 #define ENB 6
@@ -172,7 +172,7 @@ void vr(boolean Richtung, int Starke)
 void ansteuern(float Y,float X)
 {
   
-  if (Y > 140)
+  if (Y > 140 && Y <= 255)
   {
     float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0;
     
@@ -182,7 +182,7 @@ void ansteuern(float Y,float X)
     hr(false, starke);
     hl(false, starke);
   }
-  if (Y < 114)
+  if (Y < 114 && Y >= 0)
   {
     float starke = (32.0/2601.0)*(Y*Y)-(160.0/51.0)*Y + 200.0;
 
