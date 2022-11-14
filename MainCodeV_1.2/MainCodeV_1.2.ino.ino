@@ -6,10 +6,10 @@
  *   - 2e colmun: Stef?
  * replace pin numbers by the ones you use
  ******************************************************************/
-#define PS2_DAT        8  //14    
-#define PS2_CMD        A15  //15
-#define PS2_SEL        A14  //16
-#define PS2_CLK        7  //17
+#define PS2_DAT        22  //14    
+#define PS2_CMD        A9  //15
+#define PS2_SEL        A10  //16
+#define PS2_CLK        12  //17
 //define the L298n IO pin
 #define ENA 5
 #define ENB 6
@@ -21,7 +21,7 @@
 #define END 10
 #define IN5 13
 #define IN6 4
-#define IN7 1
+#define IN7 50
 #define IN8 2
 /******************************************************************
  * select modes of PS2 controller:
@@ -118,7 +118,7 @@ void setup(){
 }
 
 
-void hl(starke)
+void hl(int starke)
 {
     analogWrite(ENA,abs(starke));
   
@@ -184,7 +184,7 @@ void vr(int starke)
 
 void ansteuern(float Y,float X)
 {   
-  float starke = map(analogRead(0,255),-200,200);
+  float starke = map(Y,0, 255,200,-200);
   Serial.println(starke);
   vr(starke);
   vl(starke);
