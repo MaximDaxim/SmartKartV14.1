@@ -184,12 +184,14 @@ void vr(int starke)
 
 void ansteuern(float Y,float X)
 {   
-  float starke = map(Y,0, 255,200,-200);
-  Serial.println(starke);
-  vr(starke);
-  vl(starke);
-  hr(starke);
-  hl(starke);
+  float starkeY = map(Y,0, 255,200,-200);
+  float starkeX = map(Y,0, 255,200,-200);
+  Serial.println(starkeY);
+  Serial.println(starkeX);
+  vr(starkeY);
+  vl(starkeY);
+  hr(starkeY);
+  hl(starkeY);
 }
   
 
@@ -209,7 +211,7 @@ void loop() {
   else { //DualShock Controller
     ps2x.read_gamepad(false, vibrate); //read controller and set large motor to spin at 'vibrate' speed
 
-    ansteuern(ps2x.Analog(PSS_LY),0);
+    ansteuern(ps2x.Analog(PSS_LY),ps2x.Analog(PSS_LX));
 
     if(ps2x.Button(PSB_L1) || ps2x.Button(PSB_R1)) { //print stick values if either is TRUE
       Serial.print("Stick Values:");
