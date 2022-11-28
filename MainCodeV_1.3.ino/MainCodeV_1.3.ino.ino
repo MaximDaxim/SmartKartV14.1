@@ -208,30 +208,44 @@ void vr(int starke)
 
 void ansteuern(float Y,float X)
 {
-  //float starkeY = map(Y,0, 255,200,-200);
+  float starkeY = map(Y,0, 255,200,-200);
   //float starkeX = map(X,0, 255,200,-200);
   Serial.println(starkeY);
-  Serial.println(starkeX);
-  int y = ps2x.Analog(PSS_LY)
-  int x = ps2x.Analog(PSS_LX)
-  if(x <= ZDEADZONE2 || x >= ZDEADZONE1 || y <= ZDEADZONE2 || y >= ZDEADZONE1) // liegen x oder y außerhalb der deadzone
-{
-  if(x <= ZDEADZONE2 && x >= ZDEADZONE1) // liegt x im Bereich, der gerade fahren soll
+  //Serial.println(starkeX);
+
+  if(X <= ZDEADZONE2 && X >= ZDEADZONE1 && Y >= ZDEADZONE1 && Y <= ZDEADZONE2)
   {
-      if(y >= ZDEADZONE2 ) // ist y unten
-      {} // rückwärts fahren
-      if(y <= ZDEADZONE1) // ist y oben
+      vr(0);
+      vl(0);
+      hr(0);
+      hl(0);
+    
+    }
+    
+  if(X <= ZDEADZONE2 || X >= ZDEADZONE1 || Y <= ZDEADZONE2 || Y >= ZDEADZONE1) // liegen x oder y außerhalb der deadzone
+{
+  if(X <= ZDEADZONE2 && X >= ZDEADZONE1) // liegt x im Bereich, der gerade fahren soll
+  {
+      if(Y >= ZDEADZONE2 ) // ist y unten
+      {
+      vr(starkeY);
+      vl(starkeY);
+      hr(starkeY);
+      hl(starkeY);
+        
+        } // rückwärts fahren
+      if(Y <= ZDEADZONE1) // ist y oben
       {
       vr(starkeY);
       vl(starkeY);
       hr(starkeY);
       hl(starkeY);
       }// vorwärts fahren
-  }
-    
-}
-   
-}
+    }   
+}  
+} // Vorwärts und Rückwerts fahren!
+
+
 
 
 
