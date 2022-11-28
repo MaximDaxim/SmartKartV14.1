@@ -1,11 +1,13 @@
 #include <PS2X_lib.h>  //for v1.6
 
+
+
 /******************************************************************
- * set pins connected to PS2 controller:
- *   - 1e column: original 
- *   - 2e colmun: Stef?
- * replace pin numbers by the ones you use
- ******************************************************************/
+* set pins connected to PS2 controller:
+*   - 1e column: original
+*   - 2e colmun: Stef?
+* replace pin numbers by the ones you use
+******************************************************************/
 #define PS2_DAT        22  //14    
 #define PS2_CMD        A9  //15
 #define PS2_SEL        A10  //16
@@ -23,27 +25,37 @@
 #define IN6 4
 #define IN7 50
 #define IN8 2
+double ZDEADZONE1 = 127.5 -50;
+double ZDEADZONE2 = 127.5 +50;
 /******************************************************************
- * select modes of PS2 controller:
- *   - pressures = analog reading of push-butttons 
- *   - rumble    = motor rumbling
- * uncomment 1 of the lines for each mode selection
- ******************************************************************/
+* select modes of PS2 controller:
+*   - pressures = analog reading of push-butttons
+*   - rumble    = motor rumbling
+* uncomment 1 of the lines for each mode selection
+******************************************************************/
 //#define pressures   true
 #define pressures   false
 //#define rumble      true
 #define rumble      false
 int stickVorne = PSS_LY;
 
+
+
 PS2X ps2x; // create PS2 Controller Class
 
-//right now, the library does NOT support hot pluggable controllers, meaning 
-//you must always either restart your Arduino after you connect the controller, 
+
+
+//right now, the library does NOT support hot pluggable controllers, meaning
+//you must always either restart your Arduino after you connect the controller,
 //or call config_gamepad(pins) again after connecting the controller.
+
+
 
 int error = 0;
 byte type = 0;
 byte vibrate = 0;
+
+
 
 void setup(){
   Serial.begin(9600);
@@ -63,7 +75,7 @@ void setup(){
   digitalWrite(ENB, HIGH);
   digitalWrite(ENC, HIGH);  
   digitalWrite(END, HIGH);
- 
+
   Serial.begin(57600);
   
   delay(300);  //added delay to give wireless ps2 module some time to startup, before configuring it
@@ -76,15 +88,15 @@ void setup(){
   if(error == 0){
     Serial.print("Found Controller, configured successful ");
     Serial.print("pressures = ");
-	if (pressures)
-	  Serial.println("true ");
-	else
-	  Serial.println("false");
-	Serial.print("rumble = ");
-	if (rumble)
-	  Serial.println("true)");
-	else
-	  Serial.println("false");
+  if (pressures)
+    Serial.println("true ");
+  else
+    Serial.println("false");
+  Serial.print("rumble = ");
+  if (rumble)
+    Serial.println("true)");
+  else
+    Serial.println("false");
     Serial.println("Try out all the buttons, X will vibrate the controller, faster as you press harder;");
     Serial.println("holding L1 or R1 will print out the analog stick values.");
     Serial.println("Note: Go to www.billporter.info for updates and to report bugs.");
@@ -95,12 +107,14 @@ void setup(){
   else if(error == 2)
     Serial.println("Controller found but not accepting commands. see readme.txt to enable debug. Visit www.billporter.info for troubleshooting tips");
 
-  else if(error == 3)
+
+
+ else if(error == 3)
     Serial.println("Controller refusing to enter Pressures mode, may not support it. ");
   
 //  Serial.print(ps2x.Analog(1), HEX);
   
-  type = ps2x.readType(); 
+  type = ps2x.readType();
   switch(type) {
     case 0:
       Serial.print("Unknown Controller type found ");
@@ -111,11 +125,13 @@ void setup(){
     case 2:
       Serial.print("GuitarHero Controller found ");
       break;
-	case 3:
+  case 3:
       Serial.print("Wireless Sony DualShock Controller found ");
       break;
    }
 }
+
+
 
 
 void hl(int starke)
@@ -134,6 +150,8 @@ void hl(int starke)
     }
 }
 
+
+
 void hr(int starke)
 {
   analogWrite(ENB,abs(starke));
@@ -149,6 +167,8 @@ void hr(int starke)
     digitalWrite(IN6,false);
   }
 }
+
+
 
 void vl(int starke)
 {
@@ -166,6 +186,8 @@ void vl(int starke)
   }
 }
 
+
+
 void vr(int starke)
 {
   analogWrite(END,abs(starke));
@@ -182,18 +204,37 @@ void vr(int starke)
   }
 }
 
+
+
 void ansteuern(float Y,float X)
-{   
-  float starkeY = map(Y,0, 255,200,-200);
-  float starkeX = map(Y,0, 255,200,-200);
+{
+  //float starkeY = map(Y,0, 255,200,-200);
+  //float starkeX = map(X,0, 255,200,-200);
   Serial.println(starkeY);
   Serial.println(starkeX);
-  vr(starkeY);
-  vl(starkeY);
-  hr(starkeY);
-  hl(starkeY);
+  int y = ps2x.Analog(PSS_LY)
+  int x = ps2x.Analog(PSS_LX)
+  if(x <= ZDEADZONE2 || x >= ZDEADZONE1 || y <= ZDEADZONE2 || y >= ZDEADZONE1) // liegen x oder y außerhalb der deadzone
+{
+  if(x <= ZDEADZONE2 && x >= ZDEADZONE1) // liegt x im Bereich, der gerade fahren soll
+  {
+      if(y >= ZDEADZONE2 ) // ist y unten
+      {} // rückwärts fahren
+      if(y <= ZDEADZONE1) // ist y oben
+      {
+      vr(starkeY);
+      vl(starkeY);
+      hr(starkeY);
+      hl(starkeY);
+      }// vorwärts fahren
+  }
+    
 }
-  
+   
+}
+
+
+
 
 void loop() {
   /* You must Read Gamepad to get new values and set vibration values
@@ -202,26 +243,30 @@ void loop() {
      You should call this at least once a second
    */  
   if(error == 1) //skip loop if no controller found
-    return; 
+    return;
   
   if(type == 2){ //Guitar Hero Controller
-    ps2x.read_gamepad();          //read controller 
+    ps2x.read_gamepad();          //read controller
    
   }
   else { //DualShock Controller
     ps2x.read_gamepad(false, vibrate); //read controller and set large motor to spin at 'vibrate' speed
 
-    ansteuern(ps2x.Analog(PSS_LY),ps2x.Analog(PSS_LX));
 
-    if(ps2x.Button(PSB_L1) || ps2x.Button(PSB_R1)) { //print stick values if either is TRUE
+
+   ansteuern(ps2x.Analog(PSS_LY),ps2x.Analog(PSS_LX));
+
+
+
+   if(ps2x.Button(PSB_L1) || ps2x.Button(PSB_R1)) { //print stick values if either is TRUE
       Serial.print("Stick Values:");
       Serial.print(ps2x.Analog(PSS_LY), DEC); //Left stick, Y axis. Other options: LX, RY, RX  
       Serial.print(",");
-      Serial.print(ps2x.Analog(PSS_LX), DEC); 
+      Serial.print(ps2x.Analog(PSS_LX), DEC);
       Serial.print(",");
-      Serial.print(ps2x.Analog(PSS_RY), DEC); 
+      Serial.print(ps2x.Analog(PSS_RY), DEC);
       Serial.print(",");
-      Serial.println(ps2x.Analog(PSS_RX), DEC); 
+      Serial.println(ps2x.Analog(PSS_RX), DEC);
     }    
      
   }
