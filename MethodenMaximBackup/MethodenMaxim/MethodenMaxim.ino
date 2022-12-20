@@ -1,3 +1,8 @@
+#define PS2_DAT        22  //14    
+#define PS2_CMD        A9  //15
+#define PS2_SEL        A10  //16
+#define PS2_CLK        12  //17
+//define the L298n IO pin
 #define ENA 5
 #define ENB 6
 #define IN1 7
@@ -8,7 +13,7 @@
 #define END 10
 #define IN5 13
 #define IN6 4
-#define IN7 1
+#define IN7 50
 #define IN8 2
 // Port 15
 
@@ -132,6 +137,6 @@ void ansteuern(float Y,float X)
 }
 void loop() 
 {
-  ansteuern(255,0);
+  forward();
  
 }
