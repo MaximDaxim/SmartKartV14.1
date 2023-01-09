@@ -206,26 +206,29 @@ void vr(int starke)
 
 
 
-void ansteuern(float Y,float X)
+void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 {
 //Deadzone lmao
   float starkeY = map(Y, 0, 255, -200, 200);
   if(127,5 > X)
   {
-    float starkeX = starkeY*map(X, 0, 127.5, 0, 1);
-    vr(starkeX);
-    hr(starkeX);
-    vl(starkeY);
-    hl(starkeY); 
+    float starkeX = starkeY*map(X, 127.5, 0.00, 1.00, 0.50);
+    vr(-starkeY);
+    hr(-starkeY);
+    vl(-starkeX);
+    hl(-starkeX);
+    Serial.print(starkeX); 
   }
   if(127,5 < X)
   {
-    float starkeX = starkeY*map(X, 127.5, 255, 1, 0);
-    vr(starkeY);
-    hr(starkeY);
-    vl(starkeX);
-    hl(starkeX);
+    float starkeX = starkeY*map(X, 127.50, 255.00, 1.00, 0.50);
+    vr(-starkeX);
+    hr(-starkeX);
+    vl(-starkeY);
+    hl(-starkeY);
+    Serial.print(starkeX);
   }
+  
 
 
 } // Vorwärts und Rückwerts fahren!
