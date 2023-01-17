@@ -137,7 +137,7 @@ void setup(){
 void hl(int starke)
 {
     analogWrite(ENA,abs(starke));
-  
+
     if(starke > 0)
     {
     digitalWrite(IN1,true);
@@ -150,12 +150,14 @@ void hl(int starke)
     }
 }
 
+ 
 
+ 
 
-void hr(int starke)
+void vl(int starke) //13 4 zzu
 {
-  analogWrite(ENB,abs(starke));
-  
+  analogWrite(ENC,abs(starke));
+
   if(starke > 0)
   {
     digitalWrite(IN5,false);
@@ -168,12 +170,14 @@ void hr(int starke)
   }
 }
 
+ 
 
+ 
 
-void vl(int starke)
+void hr(int starke) // 9 11
 {
-  analogWrite(ENC,abs(starke));
-  
+  analogWrite(ENB,abs(starke));
+
   if(starke > 0)
   {
     digitalWrite(IN3,false);
@@ -186,12 +190,14 @@ void vl(int starke)
   }
 }
 
+ 
 
+ 
 
 void vr(int starke)
 {
   analogWrite(END,abs(starke));
-  
+
   if(starke > 0)
   {
     digitalWrite(IN7,true);
@@ -221,7 +227,7 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
   starkeY = map(Y, 0, 255, 200, -200);
   if(127,5 > X)
   {
-    starkeX = starkeY*(0.009*X);
+    starkeX = starkeY*map(X, 0, 127.5,0,1);
     vr(starkeY);
     hr(starkeY);
     vl(starkeX);
@@ -230,7 +236,7 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
   }
   if(127,5 < X)
   {
-    starkeX = starkeY;
+    starkeX = starkeY*map(X, 255, 127.5,0,1);
     vr(starkeX);
     hr(starkeX);
     vl(starkeY);
