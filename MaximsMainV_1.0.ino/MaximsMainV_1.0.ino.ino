@@ -208,25 +208,34 @@ void vr(int starke)
 
 void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 {
+  float starkeY;
+  float starkeX;
 //Deadzone lmao
-  float starkeY = map(Y, 0, 255, -200, 200);
+  if((ps2x.Analog(PSS_LX), DEC) == 0 && (ps2x.Analog(PSS_LY), DEC) == 0 && (ps2x.Analog(PSS_RX), DEC) == 0 && (ps2x.Analog(PSS_RY), DEC) == 0)
+  {
+    vr(0);
+    hr(0);
+    vl(0);
+    hl(0);
+  }
+  starkeY = map(Y, 0, 255, 200, -200);
   if(127,5 > X)
   {
-    float starkeX = starkeY*map(X, 127.5, 0.00, 1.00, 0.50);
-    vr(-starkeY);
-    hr(-starkeY);
-    vl(-starkeX);
-    hl(-starkeX);
-    Serial.print(starkeX); 
+    starkeX = starkeY*(0.009*X);
+    vr(starkeY);
+    hr(starkeY);
+    vl(starkeX);
+    hl(starkeX);
+    //Serial.print(starkeX); 
   }
   if(127,5 < X)
   {
-    float starkeX = starkeY*map(X, 127.50, 255.00, 1.00, 0.50);
-    vr(-starkeX);
-    hr(-starkeX);
-    vl(-starkeY);
-    hl(-starkeY);
-    Serial.print(starkeX);
+    starkeX = starkeY;
+    vr(starkeX);
+    hr(starkeX);
+    vl(starkeY);
+    hl(starkeY);
+    //Serial.print(starkeX);
   }
   
 
@@ -258,7 +267,6 @@ void loop() {
 
 
  ansteuern(ps2x.Analog(PSS_LY),ps2x.Analog(PSS_LX));
-
 
 
    if(ps2x.Button(PSB_L1) || ps2x.Button(PSB_R1)) { //print stick values if either is TRUE
