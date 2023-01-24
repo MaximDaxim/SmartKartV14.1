@@ -216,21 +216,20 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 {
   float starkeY;
   float starkeX;
-//Deadzone lmao
-
+  
   starkeY = map(Y, 0, 255, 200, -200);
   if(140 > X)
   {
-    starkeX = starkeY*(map(X, 0, 127,0,100)/100);
+    starkeX = starkeY*(map(X, 0, 127,0,100)/100.00);
     vr(starkeY);
     hr(starkeY);
     vl(starkeX);
     hl(starkeX);
-    Serial.println(starkeX); 
+    //Serial.println(starkeX); 
   }
   if(118 < X)
   {
-    starkeX = starkeY*(map(X, 255, 127,0,100)/100);
+    starkeX = starkeY*(map(X, 255, 127,0,100)/100.00);
     vr(starkeX);
     hr(starkeX);
     vl(starkeY);
