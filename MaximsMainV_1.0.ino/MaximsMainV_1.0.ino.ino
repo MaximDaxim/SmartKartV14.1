@@ -216,6 +216,10 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 {
   float starkeY;
   float starkeX;
+
+  if(Y > 118 && Y < 140)
+  {
+  }
   
   starkeY = map(Y, 0, 255, 200, -200);
   if(140 > X)
@@ -254,6 +258,8 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 
 
 void loop() {
+  hr(200);
+  hl(200);
   /* You must Read Gamepad to get new values and set vibration values
      ps2x.read_gamepad(small motor on/off, larger motor strenght from 0-255)
      if you don't enable the rumble, use ps2x.read_gamepad(); with no values
@@ -272,7 +278,7 @@ void loop() {
 
 
 
- ansteuern(ps2x.Analog(PSS_LY),ps2x.Analog(PSS_LX));
+ ansteuern(ps2x.Analog(PSS_RY),ps2x.Analog(PSS_LX));
  
  
 
