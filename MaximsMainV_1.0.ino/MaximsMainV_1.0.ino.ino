@@ -219,6 +219,10 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 
   if(Y > 118 && Y < 140)
   {
+   vl(starkeX);
+   vr(starkeX*(-1));
+   hl(starkeX*(-1));
+   hr(starkeX);
   }
   
   starkeY = map(Y, 0, 255, 200, -200);
