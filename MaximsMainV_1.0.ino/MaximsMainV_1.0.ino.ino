@@ -212,36 +212,69 @@ void vr(int starke)
 
 
 
-void ansteuern(float Y,float X) //starkeX ist useless fix den shit
-{
+void ansteuern(float RY,float LX, float LY) {
   float starkeY;
   float starkeX;
 
-  if(Y > 118 && Y < 140)
+  if(RY > 118 && RY < 140) // Hovern/schräg
   {
+   if(LY <140 && LY > 118) // hovern
+   {
+    starkeX = map(LX, 0, 255, 200, -200);
+    vl(starkeX);
+    vr(starkeX*(-1));
+    hl(starkeX*(-1));
+    hr(starkeX);
+    
+   }
+    if(LY >140 || LY <118) //schräg
+    {
+     if(LX > 140 && LY > 140) //vorne rechts
+     {
+      vl(200);
+      hr(200);
+     }
+     if(LX < 118 && LY > 140) // vorne links
+     {
+      vr(200);
+      hl(200);
+     }
+     if(LX < 118 && LY < 118) // hinten links
+     {
+      vl(-200);
+      hr(-200);
+     }
+     if(LX > 140 && LY < 118) // hinten rechts
+     {
+      vr(-200);
+      hl(-200);
+     }
+    
+    }
+
    
   }
   
-  starkeY = map(Y, 0, 255, 200, -200);
-  if(140 > X)
+  starkeY = map(RY, 0, 255, 200, -200);
+  if(140 > LX)                  //Linkskurve
   {
-    starkeX = starkeY*(map(X, 0, 127,0,100)/100.00);
+    starkeX = starkeY*(map(LX, 0, 127,0,100)/100.00);
     vr(starkeY);
     hr(starkeY);
     vl(starkeX);
     hl(starkeX);
     //Serial.println(starkeX); 
   }
-  if(118 < X)
+  if(118 < LX)                  //Rechtskurve
   {
-    starkeX = starkeY*(map(X, 255, 127,0,100)/100.00);
+    starkeX = starkeY*(map(LX, 255, 127,0,100)/100.00);
     vr(starkeX);
     hr(starkeX);
     vl(starkeY);
     hl(starkeY);
     //Serial.println(starkeX);
   }
-  if(118 < X && 140 > X)
+  if(118 < LX && 140 > LX)            // Nach vorne/hinten
   {
     vr(starkeY);
     hr(starkeY);
@@ -251,7 +284,7 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
   
 
 
-} // Vorwärts und Rückwerts fahren!
+} 
 
 
 
@@ -259,8 +292,7 @@ void ansteuern(float Y,float X) //starkeX ist useless fix den shit
 
 
 void loop() {
-  hr(200);
-  hl(200);
+  
   /* You must Read Gamepad to get new values and set vibration values
      ps2x.read_gamepad(small motor on/off, larger motor strenght from 0-255)
      if you don't enable the rumble, use ps2x.read_gamepad(); with no values
@@ -279,7 +311,7 @@ void loop() {
 
 
 
- ansteuern(ps2x.Analog(PSS_RY),ps2x.Analog(PSS_LX));
+ ansteuern(ps2x.Analog(PSS_RY),ps2x.Analog(PSS_LX),ps2x.Analog(PSS_LY)); // linker stick y werte hinzugefügt
  
  
 
