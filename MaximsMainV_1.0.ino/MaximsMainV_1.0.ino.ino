@@ -215,6 +215,7 @@ void vr(int starke)
 void ansteuern(float RY,float LX, float LY) {
   float starkeY;
   float starkeX;
+  starkeY = map(RY, 0, 255, 200, -200);
 
   if(RY > 118 && RY < 140) // Hovern/schräg
   {
@@ -225,7 +226,7 @@ void ansteuern(float RY,float LX, float LY) {
     vr(starkeX*(-1));
     hl(starkeX*(-1));
     hr(starkeX);
-    
+    //Serial.println("Manfred");
    }
     if(LY >140 || LY <118) //schräg
     {
@@ -255,17 +256,18 @@ void ansteuern(float RY,float LX, float LY) {
    
   }
   
-  starkeY = map(RY, 0, 255, 200, -200);
-  if(140 > LX)                  //Linkskurve
+ 
+ else if(140 > LX)                  //Linkskurve
   {
     starkeX = starkeY*(map(LX, 0, 127,0,100)/100.00);
     vr(starkeY);
     hr(starkeY);
     vl(starkeX);
     hl(starkeX);
-    //Serial.println(starkeX); 
+    //Serial.println(starkeX);
+    //Serial.println(starkeY);
   }
-  if(118 < LX)                  //Rechtskurve
+ else if(118 < LX)                  //Rechtskurve
   {
     starkeX = starkeY*(map(LX, 255, 127,0,100)/100.00);
     vr(starkeX);
@@ -273,13 +275,16 @@ void ansteuern(float RY,float LX, float LY) {
     vl(starkeY);
     hl(starkeY);
     //Serial.println(starkeX);
+    //Serial.println(starkeY);
+    //Serial.println("UWE");
   }
-  if(118 < LX && 140 > LX)            // Nach vorne/hinten
+ else if(118 < LX && 140 > LX)            // Nach vorne/hinten
   {
     vr(starkeY);
     hr(starkeY);
     vl(starkeY);
     hl(starkeY);
+    //Serial.println(starkeY);
   }
   
 
@@ -292,7 +297,7 @@ void ansteuern(float RY,float LX, float LY) {
 
 
 void loop() {
-  
+   ansteuern(125,150,100); // linker stick y werte hinzugefügt
   /* You must Read Gamepad to get new values and set vibration values
      ps2x.read_gamepad(small motor on/off, larger motor strenght from 0-255)
      if you don't enable the rumble, use ps2x.read_gamepad(); with no values
@@ -311,7 +316,7 @@ void loop() {
 
 
 
- ansteuern(ps2x.Analog(PSS_RY),ps2x.Analog(PSS_LX),ps2x.Analog(PSS_LY)); // linker stick y werte hinzugefügt
+
  
  
 
