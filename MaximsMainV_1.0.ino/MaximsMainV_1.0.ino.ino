@@ -297,7 +297,7 @@ void ansteuern(float RY,float LX, float LY) {
 
 
 void loop() {
-   ansteuern(125,150,100); // linker stick y werte hinzugefügt
+   
   /* You must Read Gamepad to get new values and set vibration values
      ps2x.read_gamepad(small motor on/off, larger motor strenght from 0-255)
      if you don't enable the rumble, use ps2x.read_gamepad(); with no values
@@ -315,7 +315,7 @@ void loop() {
 
 
 
-
+  ansteuern(ps2x.Analog(PSS_RY),ps2x.Analog(PSS_LX),ps2x.Analog(PSS_LY));
 
  
  
