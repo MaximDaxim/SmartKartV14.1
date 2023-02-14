@@ -230,23 +230,25 @@ void ansteuern(float RY,float LX, float LY) {
     {
      if(LX > 140 && LY > 140) //vorne rechts
      {
-      vl(200);
-      hr(200);
+      vr(-200);
+      hl(-200);
      }
      if(LX < 118 && LY > 140) // vorne links
+     {
+      
+      vl(-200);
+      hr(-200);
+     }
+     if(LX < 118 && LY < 118) // hinten links
      {
       vr(200);
       hl(200);
      }
-     if(LX < 118 && LY < 118) // hinten links
-     {
-      vl(-200);
-      hr(-200);
-     }
      if(LX > 140 && LY < 118) // hinten rechts
      {
-      vr(-200);
-      hl(-200);
+      
+      vl(200);
+      hr(200);
      }
     
     }
