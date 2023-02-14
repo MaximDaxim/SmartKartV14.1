@@ -25,8 +25,6 @@
 #define IN6 4
 #define IN7 50
 #define IN8 2
-double ZDEADZONE1 = 127.5 -50;
-double ZDEADZONE2 = 127.5 +50;
 /******************************************************************
 * select modes of PS2 controller:
 *   - pressures = analog reading of push-butttons
@@ -222,10 +220,10 @@ void ansteuern(float RY,float LX, float LY) {
    if(LY <140 && LY > 118) // hovern
    {
     starkeX = map(LX, 0, 255, 200, -200);
-    vl(starkeX);
-    vr(starkeX*(-1));
-    hl(starkeX*(-1));
-    hr(starkeX);
+    vl(-starkeX);
+    vr(starkeX);
+    hl(starkeX);
+    hr(-starkeX);
     //Serial.println("Manfred");
    }
     if(LY >140 || LY <118) //schräg
