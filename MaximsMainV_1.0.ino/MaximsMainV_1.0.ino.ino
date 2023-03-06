@@ -19,7 +19,7 @@
 #define IN2 8
 #define IN3 9
 #define IN4 11
-#define ENC 3
+#define ENC A15
 #define END 10
 #define IN5 13
 #define IN6 4
