@@ -241,6 +241,7 @@ void ansteuern(float RY, float LX, float LY) {
   {
     if (LY < 140 && LY > 118) // hovern
     {
+<<<<<<< HEAD
       starkeX = map(LX, 0, 255, 200, -200);
       vl(-starkeX);
       vr(starkeX);
@@ -271,6 +272,32 @@ void ansteuern(float RY, float LX, float LY) {
         hl(-200);
       }
 
+=======
+     if(LX > 140 && LY > 140) //vorne links
+     {
+      
+      vr(-200);
+      hl(-200);
+     }
+     if(LX < 118 && LY > 140) // vorne rechts
+     {
+     vl(-200);
+     hr(-200);
+     
+     }
+     if(LX < 118 && LY < 118) // hinten rechts
+     {
+      
+      vr(200);
+      hl(200);
+     }
+     if(LX > 140 && LY < 118) // hinten links
+     {
+     vl(200);
+     hr(200); 
+     }
+    
+>>>>>>> a304395d5bfdbd594f0b7775372d788a9e777d37
     }
 
 
