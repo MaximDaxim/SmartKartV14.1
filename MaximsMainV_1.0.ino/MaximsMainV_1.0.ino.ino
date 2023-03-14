@@ -26,12 +26,147 @@ Servo myservo;
 #define IN6 4
 #define IN7 50
 #define IN8 2
-/******************************************************************
-  select modes of PS2 controller:
-    - pressures = analog reading of push-butttons
-    - rumble    = motor rumbling
-  uncomment 1 of the lines for each mode selection
-******************************************************************/
+#include <Wire.h>
+#include "Adafruit_TCS34725.h"
+#include <FastLED.h>
+/* Initialise with default values (int time = 2.4ms, gain = 1x) */
+Adafruit_TCS34725 tcs = Adafruit_TCS34725();
+int a = 1;
+#define SCL   SCL21    
+#define SDA   SDA20
+#define DATA_PIN 50
+#define NUM_LEDS 52
+#define COLOR_ORDER GRB
+CRGB leds[NUM_LEDS];
+String color = ""; //reading 
+/* Initialise with specific int time and gain values */
+//Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_100MS, TCS34725_GAIN_1X);
+ float  Ruecklicht[2]={15, 29};
+
+void blinkerR(){
+    for(int i = 23; i <= 29; i++){
+    leds[i] = CRGB::OrangeRed;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(10);
+  }
+  for(int i = 7; i >= 0; i--){
+    leds[i] = CRGB::OrangeRed;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+  for(int i = 36; i >= 30; i--){
+    leds[i] = CRGB::OrangeRed;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+}
+
+void blinkerL(){
+  for(int i = 23; i >= 15; i--){
+    leds[i] = CRGB::OrangeRed;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+ 
+   for(int i = 8; i <= 15; i++){
+    leds[i] = CRGB::OrangeRed;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+  for(int i = 37; i <= 44; i++){
+    leds[i] = CRGB::OrangeRed;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+}
+
+void banane()
+{
+    for(int i = 0; i <= 15; i++){
+    leds[i] = CRGB::Yellow;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+ 
+   for(int i = 29; i >= 15; i--){
+    leds[i] = CRGB::Yellow;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+  for(int i = 30; i <= 44; i++){
+    leds[i] = CRGB::Yellow;
+    FastLED.show();
+    delay(1);
+    leds[i] = CRGB::Black;
+    FastLED.show();
+    delay(1);
+  }
+}
+void SetOrange(){
+  blinkerR();
+ 
+}
+
+     void SetGreen(){
+      
+      blinkerL();
+      }
+     
+      void SetBlue(){
+  for(int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB::Blue;
+      FastLED.show();
+  }}
+  void SetRed(){
+  for(int i = 0; i < NUM_LEDS; i++) {
+      leds[i] = CRGB::Red;
+      FastLED.show();
+      }}
+  void SetYellow(){
+ banane();}
+
+
+ void changeLED (String color){
+  if (color == "Orange"){
+    SetOrange();
+}
+else if (color == "Blue"){
+  SetBlue();
+  }
+  else if (color == "Red"){
+  SetRed();
+}
+  else if (color == "Yellow"){
+  SetYellow();
+ }
+ else if (color == "Green"){
+  SetGreen();
+ }}
+
 //#define pressures   true
 #define pressures   false
 //#define rumble      true
@@ -57,6 +192,7 @@ int pos = 90;
 
 
 void setup() {
+  
   Serial.begin(9600);
   myservo.attach(3);
   pinMode(IN1, OUTPUT);
@@ -75,6 +211,7 @@ void setup() {
   digitalWrite(ENB, HIGH);
   digitalWrite(ENC, HIGH);
   digitalWrite(END, HIGH);
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
 
   Serial.begin(57600);
 
@@ -241,7 +378,7 @@ void ansteuern(float RY, float LX, float LY) {
   {
     if (LY < 140 && LY > 118) // hovern
     {
-<<<<<<< HEAD
+
       starkeX = map(LX, 0, 255, 200, -200);
       vl(-starkeX);
       vr(starkeX);
@@ -272,7 +409,7 @@ void ansteuern(float RY, float LX, float LY) {
         hl(-200);
       }
 
-=======
+
      if(LX > 140 && LY > 140) //vorne links
      {
       
@@ -297,7 +434,7 @@ void ansteuern(float RY, float LX, float LY) {
      hr(200); 
      }
     
->>>>>>> a304395d5bfdbd594f0b7775372d788a9e777d37
+
     }
 
 
@@ -342,7 +479,44 @@ void ansteuern(float RY, float LX, float LY) {
 
 
 
+void sensorLoop()
+{
+     float red, green, blue;
+  tcs.getRGB(&red, &green, &blue);
 
+  Serial.print("R:\t"); Serial.print(int(red)); 
+  Serial.print("\tG:\t"); Serial.print(int(green)); 
+  Serial.print("\tB:\t"); Serial.print(int(blue));
+  Serial.println(color);
+ 
+  if ((red > 160) && (green < 55) && (blue < 45)) {
+color = "Red";
+}
+else if ((red < green) && (green > 100) && (blue < 50)) {
+color = "Green";
+  
+}
+else if ((red < blue) && (green < blue) && (blue > 100)) {
+color = "Blue";
+   
+}
+else if ((red < 110 ) && (green < 100) && (blue < 70 )) {
+color = "Yellow";
+}
+else if ((red < 170 ) && (green > 45) && (blue < 40  )) {
+color = "Orange";
+
+}
+else if  ((red < 140) && (green > 50) && (blue < 35)) {
+color = "Purple";
+}
+
+changeLED(color);
+      
+// Serial.print();
+  FastLED.show();
+  
+  }
 void loop() {
 
   /* You must Read Gamepad to get new values and set vibration values
@@ -363,6 +537,7 @@ void loop() {
 
     servo();
     ansteuern(ps2x.Analog(PSS_RY), ps2x.Analog(PSS_LX), ps2x.Analog(PSS_LY));
+    sensorLoop();
 
 
 
@@ -382,18 +557,3 @@ void loop() {
   }
   delay(50);
 }
-
-
-
-/*
-
-   starkeX = map(X, 0, 255, 200, -200);
-   if(118>X || 140<X)
-   {
-   vl(starkeX);
-   vr(starkeX*(-1));
-   hl(starkeX*(-1));
-   hr(starkeX);
-   }
-
-*/
