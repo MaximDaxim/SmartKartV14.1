@@ -8,11 +8,11 @@
     - 2e colmun: Stef?
   replace pin numbers by the ones you use
 ******************************************************************/
-Servo myservo;
-#define PS2_DAT        22  //14    
-#define PS2_CMD        A9  //15
-#define PS2_SEL        A10  //16
-#define PS2_CLK        12  //17
+Servo myservo;         // Servo wird initialisiert 
+#define PS2_DAT        22  //14 alter Anschluss   
+#define PS2_CMD        A9  //15 alter Anschluss
+#define PS2_SEL        A10  //16 alter Anschluss
+#define PS2_CLK        12  //17 alter Anschluss
 //define the L298n IO pin
 #define ENA 5
 #define ENB 6
@@ -58,7 +58,7 @@ int pos = 90;
 
 void setup() {
   Serial.begin(9600);
-  myservo.attach(3);
+  myservo.attach(3);         //Dem Arduino wird gesagt wo der Servo (Pin 3) ist
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
@@ -132,18 +132,18 @@ void setup() {
 }
 
 
+//Methoden um die Räder einzelnd anzusteuern
 
-
-void hl(int starke)
+void hl(int starke) //Hinten Links
 {
-  analogWrite(ENA, abs(starke));
+  analogWrite(ENA, abs(starke)); //Stell die Stärke ein. Der Bereich liegt zwischen -255 bis 255
 
-  if (starke > 0)
+  if (starke > 0) //Wenn die Stärke positiv ist dann werden die Pins so angesteuert, sodass sie vorwärts fahren  
   {
     digitalWrite(IN1, true);
     digitalWrite(IN2, false);
   }
-  else if (starke < 0)
+  else if (starke < 0) //Wenn die Stärke negativ ist dann werden die Pins so angesteuert, sodass sie rückwärts fahren 
   {
     digitalWrite(IN1, false);
     digitalWrite(IN2, true);
@@ -154,7 +154,7 @@ void hl(int starke)
 
 
 
-void vl(int starke) //13 4 zzu
+void vl(int starke) // Vorne Links
 {
   analogWrite(ENC, abs(starke));
 
@@ -174,7 +174,7 @@ void vl(int starke) //13 4 zzu
 
 
 
-void hr(int starke) // 9 11
+void hr(int starke) //Hinten Rechts
 {
   analogWrite(ENB, abs(starke));
 
@@ -194,7 +194,7 @@ void hr(int starke) // 9 11
 
 
 
-void vr(int starke)
+void vr(int starke) //Vorne Rechts
 {
   analogWrite(END, abs(starke));
 
@@ -211,45 +211,41 @@ void vr(int starke)
 }
 
 
-void servo()
+void servo() //Servo Ansteuerung
 {
-  //Serial.println("Serov");
-  if(ps2x.Button(PSB_L2))
+  if(ps2x.Button(PSB_L2)) //Wenn die linke Schultertaste gedrückt wird
   {
-    //Serial.println(pos);
     pos++;
-    if(pos == 181){pos = 180;}
-    myservo.write(pos);
+    if(pos == 181){pos = 180;} //Der Berich liegt bei 0 bis 180
+    myservo.write(pos);   //Änder die Position um + 1, falls der Wert auf 181 ist dann setzte ihn auf 180
   }
-  else if(ps2x.Button(PSB_R2))
+  else if(ps2x.Button(PSB_R2)) //Wenn die rechte Schultertaste gedrückt wird
   {
-    //Serial.println(pos);
     pos--;
-    if(pos == -1){pos = 0;}
-    myservo.write(pos);
+    if(pos == -1){pos = 0;} //Der Berich liegt bei 0 bis 180
+    myservo.write(pos); //Änder die Position um - 1, falls der Wert auf -1 ist dann setzte ihn auf 0
   }
 }
 
 
 
-void ansteuern(float RY, float LX, float LY) {
+void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
   float starkeY;
   float starkeX;
-  starkeY = map(RY, 0, 255, 200, -200);
+  starkeY = map(RY, 0, 255, 200, -200); //Mappe den Wert des rechten Controllsticks auf eine Stärke zwischen -200 und 200
 
-  if (RY > 118 && RY < 140) // Hovern/schräg
+  if (RY > 118 && RY < 140) //Es wird geguckt ob das Auto hovert oder schräg fahren soll
   {
-    if (LY < 140 && LY > 118) // hovern
+    if (LY < 140 && LY > 118) //Es wird geguckt ob es hovert
     {
-<<<<<<< HEAD
-      starkeX = map(LX, 0, 255, 200, -200);
+
+      starkeX = map(LX, 0, 255, 200, -200); //Der linke Controllstick wird gemappt um zu hovern
       vl(-starkeX);
       vr(starkeX);
       hl(starkeX);
       hr(-starkeX);
-      //Serial.println("Manfred");
     }
-    if (LY > 140 || LY < 118) //schräg
+    if (LY > 140 || LY < 118) //Es wird geguckt ob er schräg fährt
     {
       if (LX > 140 && LY > 140) //vorne rechts
       {
@@ -272,7 +268,7 @@ void ansteuern(float RY, float LX, float LY) {
         hl(-200);
       }
 
-=======
+
      if(LX > 140 && LY > 140) //vorne links
      {
       
@@ -297,7 +293,7 @@ void ansteuern(float RY, float LX, float LY) {
      hr(200); 
      }
     
->>>>>>> a304395d5bfdbd594f0b7775372d788a9e777d37
+
     }
 
 
@@ -360,7 +356,7 @@ void loop() {
   else { //DualShock Controller
     ps2x.read_gamepad(false, vibrate); //read controller and set large motor to spin at 'vibrate' speed
 
-
+    //Unsere Methoden
     servo();
     ansteuern(ps2x.Analog(PSS_RY), ps2x.Analog(PSS_LX), ps2x.Analog(PSS_LY));
 
