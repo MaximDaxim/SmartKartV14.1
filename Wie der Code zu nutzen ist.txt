@@ -1,0 +1,13 @@
+Man nehme sich einen Controller, ein Fahrzeug seiner Wahl und einen Pc mit einem USB Anschluss.
+
+Zuerst öffnet man den Code MaximMain, dieser Code ist die Ansteuerung des Servos und der Räder.
+Um nun das Fahrzeug seiner Wahl zum fahren zu bekommen muss man sich erst vergewissern, dass das Fahrzeug
+mit dem Pc anständig verbunden ist, der richtige Port ausgewählt ist und das Board auch auf einen Arduino Mega
+eingestellt ist.
+
+Jetzt muss man den Code noch sicherheithalber einmal hochladen. Jetzt muss man den angeschalteten Controller 
+die Mode Taste drücken, wodurch vorne eine rote Lampe aufleutet. Dann öffnet man den Serialmonitor.
+Wenn dort steht, dass der Contoller verbunden ist, dann gut gemacht nun müssen sie nur noch den Arduino mit den
+Batterien versorgen und sie können den Arduino vom Pc abschließen.
+Wenn es nicht klappt probieren sie es nochmal und vergewissern sie sich, dass die Gegebenheiten, einen
+Absatz weiter oben gegeben sind.
