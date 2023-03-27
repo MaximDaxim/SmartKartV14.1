@@ -40,7 +40,7 @@ CRGB leds[NUM_LEDS];
 String color = ""; //reading 
 /* Initialise with specific int time and gain values */
 //Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_100MS, TCS34725_GAIN_1X);
- float  Ruecklicht[2]={15, 29};
+float  Ruecklicht[2]={15, 29};
 PS2X ps2x; // create PS2 Controller Class
 
 //#define pressures   true
@@ -505,7 +505,7 @@ void loop() {
   else { //DualShock Controller
     ps2x.read_gamepad(false, vibrate); //read controller and set large motor to spin at 'vibrate' speed
 
-
+    
     servo();
     ansteuern(ps2x.Analog(PSS_RY), ps2x.Analog(PSS_LX), ps2x.Analog(PSS_LY));
     sensorLoop();
