@@ -247,26 +247,7 @@ void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
     }
     if (LY > 140 || LY < 118) //Es wird geguckt ob er schräg fährt
     {
-      if (LX > 140 && LY > 140) //vorne rechts
-      {
-        vl(200);
-        hr(200);
-      }
-      if (LX < 118 && LY > 140) // vorne links
-      {
-        vr(200);
-        hl(200);
-      }
-      if (LX < 118 && LY < 118) // hinten links
-      {
-        vl(-200);
-        hr(-200);
-      }
-      if (LX > 140 && LY < 118) // hinten rechts
-      {
-        vr(-200);
-        hl(-200);
-      }
+      
 
 
      if(LX > 140 && LY > 140) //vorne links
