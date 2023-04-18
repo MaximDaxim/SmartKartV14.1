@@ -538,14 +538,7 @@ void FarbeLoop()
   
   if (color != colorVor)
   {
-  digitalWrite(LED_BUILTIN, true);
   changeLED(color);
-  digitalWrite(LED_BUILTIN, false);
-  vl(0);
-  vr(0);
-  hl(0);
-  hr(0);
-  delay(2000);
   }
   
   
