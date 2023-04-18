@@ -67,11 +67,14 @@ String color = ""; //reading
 /* Initialise with specific int time and gain values */
 //Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_100MS, TCS34725_GAIN_1X);
 float  Ruecklicht[2]={15, 29};
+float red, green, blue;
+String colorVor;
 
 
 void setup() {
   Serial.begin(9600);
   myservo.attach(3);         //Dem Arduino wird gesagt wo der Servo (Pin 3) ist
+  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
@@ -500,15 +503,14 @@ void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
 
 void FarbeLoop()
 {
-  float red, green, blue;
   tcs.getRGB(&red, &green, &blue);
 
   Serial.print("R:\t"); Serial.print(int(red)); 
   Serial.print("\tG:\t"); Serial.print(int(green)); 
   Serial.print("\tB:\t"); Serial.print(int(blue));
   Serial.println(color);
- 
-  if ((red > 160) && (green < 55) && (blue < 45))
+   
+   if ((red > 160) && (green < 55) && (blue < 45))
   {
     color = "Red";
   }
@@ -533,10 +535,24 @@ void FarbeLoop()
     color = "Purple";
   }
 
+  
+  if (color != colorVor)
+  {
+  digitalWrite(LED_BUILTIN, true);
   changeLED(color);
+  digitalWrite(LED_BUILTIN, false);
+  vl(0);
+  vr(0);
+  hl(0);
+  hr(0);
+  delay(2000);
+  }
+  
+  
       
   // Serial.print();
   FastLED.show();
+  colorVor = color;
 }
 
 
