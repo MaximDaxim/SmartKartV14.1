@@ -1,8 +1,6 @@
 #include <PS2X_lib.h>  //for v1.6
 #include <Servo.h>
-#include <Wire.h>
-#include "Adafruit_TCS34725.h"
-#include <FastLED.h>
+
 
 /******************************************************************
   set pins connected to PS2 controller:
@@ -11,13 +9,6 @@
   replace pin numbers by the ones you use
 ******************************************************************/
 Servo myservo;         // Servo wird initialisiert
-Adafruit_TCS34725 tcs = Adafruit_TCS34725();
-#define SCL   SCL21    
-#define SDA   SDA20
-#define DATA_PIN 52
-#define NUM_LEDS 52
-#define COLOR_ORDER GRB
-CRGB leds[NUM_LEDS]; 
 #define PS2_DAT        22  //14 alter Anschluss   
 #define PS2_CMD        A9  //15 alter Anschluss
 #define PS2_SEL        A10  //16 alter Anschluss
@@ -63,18 +54,14 @@ int error = 0;
 byte type = 0;
 byte vibrate = 0;
 int pos = 90;
-String color = ""; //reading 
-/* Initialise with specific int time and gain values */
-//Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_100MS, TCS34725_GAIN_1X);
-float  Ruecklicht[2]={15, 29};
-float red, green, blue;
-String colorVor;
-
+unsigned long myTime;
+unsigned long myTimePlus;
+String modus = "std";
+int item;
 
 void setup() {
   Serial.begin(9600);
   myservo.attach(3);         //Dem Arduino wird gesagt wo der Servo (Pin 3) ist
-  pinMode(LED_BUILTIN, OUTPUT);
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
   pinMode(IN3, OUTPUT);
@@ -91,18 +78,6 @@ void setup() {
   digitalWrite(ENB, HIGH);
   digitalWrite(ENC, HIGH);
   digitalWrite(END, HIGH);
-
-  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-
-  if (tcs.begin())
-  {
-    Serial.println("Found sensor");
-  }
-  else
-  {
-    Serial.println("No TCS34725 found ... check your connections");
-    while (1);
-  }
 
   Serial.begin(57600);
 
@@ -160,176 +135,18 @@ void setup() {
 }
 
 
-void blinkerR()
-{
-  for(int i = 23; i <= 29; i++)
-  {
-    leds[i] = CRGB::OrangeRed;
-    FastLED.show();
-    delay(1);
-    leds[i] = CRGB::Black;
-    FastLED.show();
-    delay(10);
- }
- 
- for(int i = 7; i >= 0; i--)
- {
-   leds[i] = CRGB::OrangeRed;
-   FastLED.show();
-   delay(1);
-   leds[i] = CRGB::Black;
-   FastLED.show();
-   delay(1);
- }
- 
- for(int i = 36; i >= 30; i--)
- {
-   leds[i] = CRGB::OrangeRed;
-   FastLED.show();
-   delay(1);
-   leds[i] = CRGB::Black;
-   FastLED.show();
-   delay(1);
-  }
-}
-
-void blinkerL()
-{
-  for(int i = 23; i >= 15; i--)
-  {
-    leds[i] = CRGB::OrangeRed;
-    FastLED.show();
-    delay(1);
-    leds[i] = CRGB::Black;
-    FastLED.show();
-    delay(1);
-  }
- 
-  for(int i = 8; i <= 15; i++)
-  {
-   leds[i] = CRGB::OrangeRed;
-   FastLED.show();
-   delay(1);
-   leds[i] = CRGB::Black;
-   FastLED.show();
-   delay(1);
- }
- 
- for(int i = 37; i <= 44; i++)
- {
-   leds[i] = CRGB::OrangeRed;
-   FastLED.show();
-   delay(1);
-   leds[i] = CRGB::Black;
-   FastLED.show();
-   delay(1);
- }
-}
-
-void banane()
-{
-  for(int i = 0; i <= 15; i++)
-  {
-    leds[i] = CRGB::Yellow;
-    FastLED.show();
-    delay(1);
-    leds[i] = CRGB::Black;
-    FastLED.show();
-    delay(1);
-  }
- 
-  for(int i = 29; i >= 15; i--)
-  {
-    leds[i] = CRGB::Yellow;
-    FastLED.show();
-    delay(1);
-    leds[i] = CRGB::Black;
-    FastLED.show();
-    delay(1);
-  }
-  
-  for(int i = 30; i <= 44; i++)
-  {
-    leds[i] = CRGB::Yellow;
-    FastLED.show();
-    delay(1);
-    leds[i] = CRGB::Black;
-    FastLED.show();
-    delay(1);
-  }
-}
-
-void SetOrange()
-{
-  blinkerR();
-}
-
-void SetGreen()
-{      
-  blinkerL();
-}
-     
-void SetBlue()
-{
-  for(int i = 0; i < NUM_LEDS; i++)
-  {
-    leds[i] = CRGB::Blue;
-    FastLED.show();
-  }
-}
-
-void SetRed()
-{
-  for(int i = 0; i < NUM_LEDS; i++)
-  {
-    leds[i] = CRGB::Red;
-    FastLED.show();
-  }
-}
-  
-void SetYellow()
-{
-  banane();
-}
-
-
-
-void changeLED (String color)
-{
-  if (color == "Orange")
-  {
-    SetOrange();
-  }
-  else if (color == "Blue")
-  {
-    SetBlue();
-  }
-  else if (color == "Red")
-  {
-    SetRed();
-  }
-  else if (color == "Yellow")
-  {
-    SetYellow();
-  }
-  else if (color == "Green")
-  {
-    SetGreen();
-  }
-}
-
 //Methoden um die Räder einzelnd anzusteuern
 
 void hl(int starke) //Hinten Links
 {
   analogWrite(ENA, abs(starke)); //Stell die Stärke ein. Der Bereich liegt zwischen -255 bis 255
 
-  if (starke > 0) //Wenn die Stärke positiv ist dann werden die Pins so angesteuert, sodass sie vorwärts fahren  
+  if (starke > 0) //Wenn die Stärke positiv ist dann werden die Pins so angesteuert, sodass sie vorwärts fahren
   {
     digitalWrite(IN1, true);
     digitalWrite(IN2, false);
   }
-  else if (starke < 0) //Wenn die Stärke negativ ist dann werden die Pins so angesteuert, sodass sie rückwärts fahren 
+  else if (starke < 0) //Wenn die Stärke negativ ist dann werden die Pins so angesteuert, sodass sie rückwärts fahren
   {
     digitalWrite(IN1, false);
     digitalWrite(IN2, true);
@@ -399,16 +216,20 @@ void vr(int starke) //Vorne Rechts
 
 void servo() //Servo Ansteuerung
 {
-  if(ps2x.Button(PSB_L2)) //Wenn die linke Schultertaste gedrückt wird
+  if (ps2x.Button(PSB_L2)) //Wenn die linke Schultertaste gedrückt wird
   {
     pos++;
-    if(pos == 181){pos = 180;} //Der Berich liegt bei 0 bis 180
+    if (pos == 181) {
+      pos = 180; //Der Berich liegt bei 0 bis 180
+    }
     myservo.write(pos);   //Änder die Position um + 1, falls der Wert auf 181 ist dann setzte ihn auf 180
   }
-  else if(ps2x.Button(PSB_R2)) //Wenn die rechte Schultertaste gedrückt wird
+  else if (ps2x.Button(PSB_R2)) //Wenn die rechte Schultertaste gedrückt wird
   {
     pos--;
-    if(pos == -1){pos = 0;} //Der Berich liegt bei 0 bis 180
+    if (pos == -1) {
+      pos = 0; //Der Berich liegt bei 0 bis 180
+    }
     myservo.write(pos); //Änder die Position um - 1, falls der Wert auf -1 ist dann setzte ihn auf 0
   }
 }
@@ -419,6 +240,62 @@ void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
   float starkeY;
   float starkeX;
   starkeY = map(RY, 0, 255, 200, -200); //Mappe den Wert des rechten Controllsticks auf eine Stärke zwischen -200 und 200
+
+  
+  if(modus == "Hanf")
+  {
+    myTimePlus = millis() + 5000;
+    item = 0;
+  }
+  else if (modus == "Pilz")
+  {
+    myTimePlus = millis() + 2000;
+    item = 1;
+  }
+  else if (modus == "Rakete")
+  {
+    myTimePlus = millis() + 7000;
+    item = 2; 
+  }
+  else if (modus == "Wasser")
+  {
+    myTimePlus = millis() + 1000;
+    while(myTime < myTimePlus)
+    {
+     vl(200);
+     hr(200);
+     myTime = millis();
+    }
+  }
+  else if (modus == "Banane")
+  {
+    vl(250);
+    hl(250);
+    vr(-250);
+    hr(-250);
+    delay(1050);
+    
+    vl(200);
+    hl(200);
+    vr(200);
+    hr(200);
+    delay(1000);
+  }
+
+  if(myTimePlus > millis() && item == 0)//Hanf
+  {
+    starkeY = starkeY * -1; 
+  }
+  if(myTimePlus > millis() && item == 1)//Pilz
+  {
+    starkeY = starkeY + 50;
+  }
+  if(myTimePlus > millis() && item == 2)//Rakete 
+  {
+    starkeY = starkeY + 20;
+  }
+  
+
 
   if (RY > 118 && RY < 140) //Es wird geguckt ob das Auto hovert oder schräg fahren soll
   {
@@ -433,33 +310,33 @@ void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
     }
     if (LY > 140 || LY < 118) //Es wird geguckt ob er schräg fährt
     {
-      
 
 
-     if(LX > 140 && LY > 140) //vorne links
-     {
-      
-      vr(-200);
-      hl(-200);
-     }
-     if(LX < 118 && LY > 140) // vorne rechts
-     {
-     vl(-200);
-     hr(-200);
-     
-     }
-     if(LX < 118 && LY < 118) // hinten rechts
-     {
-      
-      vr(200);
-      hl(200);
-     }
-     if(LX > 140 && LY < 118) // hinten links
-     {
-     vl(200);
-     hr(200); 
-     }
-    
+
+      if (LX > 140 && LY > 140) //vorne links
+      {
+
+        vr(-200);
+        hl(-200);
+      }
+      if (LX < 118 && LY > 140) // vorne rechts
+      {
+        vl(-200);
+        hr(-200);
+
+      }
+      if (LX < 118 && LY < 118) // hinten rechts
+      {
+
+        vr(200);
+        hl(200);
+      }
+      if (LX > 140 && LY < 118) // hinten links
+      {
+        vl(200);
+        hr(200);
+      }
+
 
     }
 
@@ -496,57 +373,9 @@ void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
     hl(starkeY);
     //Serial.println(starkeY);
   }
-
-
-
 }
 
-void FarbeLoop()
-{
-  tcs.getRGB(&red, &green, &blue);
 
-  Serial.print("R:\t"); Serial.print(int(red)); 
-  Serial.print("\tG:\t"); Serial.print(int(green)); 
-  Serial.print("\tB:\t"); Serial.print(int(blue));
-  Serial.println(color);
-   
-   if ((red > 160) && (green < 55) && (blue < 45))
-  {
-    color = "Red";
-  }
-  else if ((red < green) && (green > 100) && (blue < 50)) 
-  {
-    color = "Green";
-  }
-  else if ((red < blue) && (green < blue) && (blue > 100)) 
-  {
-    color = "Blue";
-  }
-  else if ((red < 110 ) && (green < 100) && (blue < 70))
-  {
-    color = "Yellow";
-  }
-  else if ((red < 170 ) && (green > 45) && (blue < 40)) 
-  {
-  color = "Orange";
-  }
-  else if  ((red < 140) && (green > 50) && (blue < 35)) 
-  {
-    color = "Purple";
-  }
-
-  
-  if (color != colorVor)
-  {
-  changeLED(color);
-  }
-  
-  
-      
-  // Serial.print();
-  FastLED.show();
-  colorVor = color;
-}
 
 
 
@@ -569,7 +398,11 @@ void loop() {
     ps2x.read_gamepad(false, vibrate); //read controller and set large motor to spin at 'vibrate' speed
 
     //Unsere Methoden
-    FarbeLoop();
+
+    //if(ps2x.ButtonPressed(RED_FRET))
+    //{
+    //}
+    
     servo();
     ansteuern(ps2x.Analog(PSS_RY), ps2x.Analog(PSS_LX), ps2x.Analog(PSS_LY));
 
@@ -595,7 +428,6 @@ void loop() {
 
 
 /*
-
    starkeX = map(X, 0, 255, 200, -200);
    if(118>X || 140<X)
    {
@@ -604,5 +436,4 @@ void loop() {
    hl(starkeX*(-1));
    hr(starkeX);
    }
-
 */
