@@ -14,27 +14,25 @@ Servo myservo;         // Servo wird initialisiert
 #define PS2_SEL        A10  //16 alter Anschluss
 #define PS2_CLK        12  //17 alter Anschluss
 //define the L298n IO pin
-#define ENA 5
-#define ENB 6
-#define IN1 7
-#define IN2 8
-#define IN3 9
-#define IN4 11
-#define ENC A15
-#define END 10
-#define IN5 13
-#define IN6 4
-#define IN7 50
-#define IN8 2
+#define ENA 5 //Hinten Links
+#define ENB 6 //Hinten Rechts
+#define IN1 7 //Hinten Links
+#define IN2 8 //Hinten Links
+#define IN3 9 //Hinten Rechts
+#define IN4 11 //Hinten Rechts
+#define ENC A15 //Hinten Rechts
+#define END 10 //Vorne Rechts
+#define IN5 13 //Vorne Links
+#define IN6 4 //Vorne Links
+#define IN7 50 //Vorne Rechts
+#define IN8 2 //Vorne Rechts
 /******************************************************************
   select modes of PS2 controller:
     - pressures = analog reading of push-butttons
-    - rumble    = motor rumbling
+    - rumble    = motor rumbling (Controller Vibrations)
   uncomment 1 of the lines for each mode selection
 ******************************************************************/
-//#define pressures   true
 #define pressures   false
-//#define rumble      true
 #define rumble      false
 int stickVorne = PSS_LY;
 
@@ -53,31 +51,31 @@ PS2X ps2x; // create PS2 Controller Class
 int error = 0;
 byte type = 0;
 byte vibrate = 0;
-int pos = 90;
-unsigned long myTime;
-unsigned long myTimePlus;
+int pos = 90; //Gibt dem Servo des Panzerturms die Richtung an
+unsigned long myTime = 0;
+unsigned long myTimePlus = 0;
 String modus = "std";
-int item;
+int item = 0;
 
 void setup() {
   Serial.begin(9600);
   myservo.attach(3);         //Dem Arduino wird gesagt wo der Servo (Pin 3) ist
-  pinMode(IN1, OUTPUT);
-  pinMode(IN2, OUTPUT);
-  pinMode(IN3, OUTPUT);
-  pinMode(IN4, OUTPUT);
-  pinMode(IN5, OUTPUT);
-  pinMode(IN6, OUTPUT);
-  pinMode(IN7, OUTPUT);
-  pinMode(IN8, OUTPUT);
-  pinMode(ENA, OUTPUT);
-  pinMode(ENB, OUTPUT);
-  pinMode(ENC, OUTPUT);
+  pinMode(IN1, OUTPUT); //Hinten Links
+  pinMode(IN2, OUTPUT); //Hinten Links
+  pinMode(IN3, OUTPUT); //Hinten Rechts
+  pinMode(IN4, OUTPUT); //Hinten Rechts
+  pinMode(IN5, OUTPUT); //Vorne Links
+  pinMode(IN6, OUTPUT); //Vorne Links
+  pinMode(IN7, OUTPUT); //Vorne Rechts
+  pinMode(IN8, OUTPUT); //Vorne Rechts
+  pinMode(ENA, OUTPUT); //Hinten Links
+  pinMode(ENB, OUTPUT); //Hinten Rechts
+  pinMode(ENC, OUTPUT); //Vorne Links
   pinMode(END, OUTPUT);
-  digitalWrite(ENA, HIGH);
-  digitalWrite(ENB, HIGH);
-  digitalWrite(ENC, HIGH);
-  digitalWrite(END, HIGH);
+  digitalWrite(ENA, HIGH); //Hinten Links
+  digitalWrite(ENB, HIGH); //Hinten Rechts
+  digitalWrite(ENC, HIGH); //Vorne Links
+  digitalWrite(END, HIGH); //Vorne Rechts
 
   Serial.begin(57600);
 
@@ -136,6 +134,7 @@ void setup() {
 
 
 //Methoden um die Räder einzelnd anzusteuern
+//Jeder Motor benötigt zwei Pins, sie bestimmen die Drehrichtung
 
 void hl(int starke) //Hinten Links
 {
@@ -216,18 +215,19 @@ void vr(int starke) //Vorne Rechts
 
 void servo() //Servo Ansteuerung
 {
-  if (ps2x.Button(PSB_L2)) //Wenn die linke Schultertaste gedrückt wird
+  //Die Schultertasten sind die Tasten hinter den Steuerungskreuzen bezeichnet mit L und R
+  if (ps2x.Button(PSB_L2)) //Wenn die linke hinter Schultertaste gedrückt wird (2)
   {
     pos++;
     if (pos == 181) {
       pos = 180; //Der Berich liegt bei 0 bis 180
     }
-    myservo.write(pos);   //Änder die Position um + 1, falls der Wert auf 181 ist dann setzte ihn auf 180
+    myservo.write(pos);   //Ändert die Position um + 1, falls der Wert auf 181 ist dann setzte ihn auf 180
   }
-  else if (ps2x.Button(PSB_R2)) //Wenn die rechte Schultertaste gedrückt wird
+  else if (ps2x.Button(PSB_R2)) //Wenn die rechte hintere Schultertaste gedrückt wird (2)
   {
     pos--;
-    if (pos == -1) {
+    if (pos <= -1) {
       pos = 0; //Der Berich liegt bei 0 bis 180
     }
     myservo.write(pos); //Änder die Position um - 1, falls der Wert auf -1 ist dann setzte ihn auf 0
@@ -235,7 +235,7 @@ void servo() //Servo Ansteuerung
 }
 
 
-
+//RY = Rechter Joystick Y-Achse (Geschwindigkeit); LX = Linker Joystick X-Achse; LY = Linker Joystick Y-Achse
 void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
   float starkeY;
   float starkeX;
@@ -269,13 +269,13 @@ void ansteuern(float RY, float LX, float LY) { //Die große Methode zum fahren
   }
   else if (modus == "Banane")
   {
-    vl(250);
+    vl(250);  //Dreht sich einmal um die eigene Achse
     hl(250);
     vr(-250);
     hr(-250);
     delay(1050);
     
-    vl(200);
+    vl(200);    //Fährt für eine Sekunde nach vorne
     hl(200);
     vr(200);
     hr(200);
